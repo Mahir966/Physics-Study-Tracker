@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Study Tracker</title>
+<style>
+body{background:#0b0f14;color:#e6edf3;font-family:Segoe UI;margin:0}
+header{padding:18px;text-align:center;background:#0a0d12;border-bottom:1px solid #111}
+.container{max-width:950px;margin:20px auto;padding:20px;background:#0f141b;border-radius:12px;box-shadow:0 0 25px rgba(0,255,255,.12)}
+h2{color:#ff4dff;border-bottom:1px solid #222;padding-bottom:6px}
+.topic{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #1a1a1a;transition:.2s}
+.topic:hover{background:#111;box-shadow:0 0 10px rgba(0,255,255,.15)}
+label{flex:1}
+input[type=checkbox]{accent-color:#00f7ff;transform:scale(1.2)}
+.tag{margin-left:8px;font-size:12px;padding:2px 6px;border-radius:6px}
+.math{background:#2a0033;color:#ff4dff}
+.theory{background:#002a2a;color:#00f7ff}
+.progress-container{background:#111;border-radius:10px;margin-top:20px}
+.progress-bar{height:18px;background:#00f7ff;width:0%;transition:.3s;box-shadow:0 0 10px #00f7ff}
+#progressText{text-align:center;margin-top:6px}
+.topbar{text-align:center;margin:10px 0}
+button{background:#00f7ff;border:none;padding:8px 15px;margin:5px;border-radius:6px;cursor:pointer}
+button:hover{box-shadow:0 0 10px #00f7ff}
+input[type=text]{padding:8px;width:60%;background:#0a0d12;border:1px solid #222;color:#fff;border-radius:6px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header></header>
+
+<div class="container">
+
+<div class="topbar">
+<input type="text" id="search" placeholder="Search topic...">
+<button onclick="filterType('all')">All</button>
+<button onclick="filterType('math')">Math</button>
+<button onclick="filterType('theory')">Theory</button>
+</div>
+
+<h2>Chapter 1: Physical Quantities & Measurement</h2>
+<div class="topic" data-type="theory"><label>Physics Introduction & Branches <span class="tag theory">Theory</span></label><input type="checkbox" data-id="1"></div>
+<div class="topic" data-type="theory"><label>Physical Quantities (Base & Derived) <span class="tag theory">Theory</span></label><input type="checkbox" data-id="2"></div>
+<div class="topic" data-type="theory"><label>SI Units <span class="tag theory">Theory</span></label><input type="checkbox" data-id="3"></div>
+<div class="topic" data-type="theory"><label>Multiples & Submultiples <span class="tag theory">Theory</span></label><input type="checkbox" data-id="4"></div>
+<div class="topic" data-type="math"><label>Dimensions <span class="tag math">Math</span></label><input type="checkbox" data-id="5"></div>
+<div class="topic" data-type="math"><label>Slide Calipers <span class="tag math">Math</span></label><input type="checkbox" data-id="6"></div>
+<div class="topic" data-type="math"><label>Screw Gauge <span class="tag math">Math</span></label><input type="checkbox" data-id="7"></div>
+<div class="topic" data-type="math"><label>Errors & Accuracy <span class="tag math">Math</span></label><input type="checkbox" data-id="8"></div>
+
+<h2>Chapter 2: Motion</h2>
+<div class="topic" data-type="theory"><label>Rest & Motion <span class="tag theory">Theory</span></label><input type="checkbox" data-id="9"></div>
+<div class="topic" data-type="theory"><label>Types of Motion <span class="tag theory">Theory</span></label><input type="checkbox" data-id="10"></div>
+<div class="topic" data-type="theory"><label>Scalar & Vector Quantities <span class="tag theory">Theory</span></label><input type="checkbox" data-id="11"></div>
+<div class="topic" data-type="math"><label>Distance & Displacement <span class="tag math">Math</span></label><input type="checkbox" data-id="12"></div>
+<div class="topic" data-type="math"><label>Speed & Velocity <span class="tag math">Math</span></label><input type="checkbox" data-id="13"></div>
+<div class="topic" data-type="math"><label>Acceleration & Retardation <span class="tag math">Math</span></label><input type="checkbox" data-id="14"></div>
+<div class="topic" data-type="math"><label>Equations of Motion <span class="tag math">Math</span></label><input type="checkbox" data-id="15"></div>
+<div class="topic" data-type="math"><label>t-th Second Distance <span class="tag math">Math</span></label><input type="checkbox" data-id="16"></div>
+<div class="topic" data-type="math"><label>Motion Graphs <span class="tag math">Math</span></label><input type="checkbox" data-id="17"></div>
+
+<div class="progress-container"><div class="progress-bar" id="bar"></div></div>
+<p id="progressText">Progress: 0%</p>
+
+<div class="topbar">
+<button onclick="resetAll()">Reset</button>
+<button onclick="checkAll()">Check All</button>
+</div>
+
+</div>
+
+<script>
+const cbs=document.querySelectorAll('input[type=checkbox]');
+const bar=document.getElementById('bar');
+const text=document.getElementById('progressText');
+
+cbs.forEach(cb=>{if(localStorage.getItem(cb.dataset.id)==='true')cb.checked=true});
+
+function update(){
+let total=cbs.length;
+let checked=document.querySelectorAll('input:checked').length;
+let p=Math.round((checked/total)*100);
+bar.style.width=p+'%';
+text.innerText='Progress: '+p+'%';
+cbs.forEach(cb=>localStorage.setItem(cb.dataset.id,cb.checked));
+}
+
+cbs.forEach(cb=>cb.addEventListener('change',update));
+
+function resetAll(){cbs.forEach(cb=>cb.checked=false);update();}
+function checkAll(){cbs.forEach(cb=>cb.checked=true);update();}
+
+function filterType(type){
+document.querySelectorAll('.topic').forEach(t=>{
+if(type==='all'||t.dataset.type===type)t.classList.remove('hidden');
+else t.classList.add('hidden');
+});}
+
+const search=document.getElementById('search');
+search.addEventListener('input',()=>{
+let val=search.value.toLowerCase();
+document.querySelectorAll('.topic').forEach(t=>{
+t.innerText.toLowerCase().includes(val)?t.classList.remove('hidden'):t.classList.add('hidden');
+});});
+
+update();
+</script>
+</body>
+</html>
